@@ -9,6 +9,8 @@
   util-linux,
   gettext,
   shadow,
+  liburing,
+  numactl,
   meson,
   ninja,
   pkg-config,
@@ -70,6 +72,18 @@ stdenv.mkDerivation (finalAttrs: {
         autoreconfHook
         gettext
       ];
+
+  buildInputs =
+    if isFuse3 then
+      [
+        liburing
+        # Note: In next (3.18.2+) fuse3 release the dependency on libnuma is removed, when updating please remove numactl.
+        # Ref: https://github.com/libfuse/libfuse/pull/1523
+        numactl
+      ]
+    else
+      [];
+
 
   outputs = [
     "bin"
